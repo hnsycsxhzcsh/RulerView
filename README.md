@@ -8,6 +8,7 @@
 <img src="https://github.com/hnsycsxhzcsh/RulerView/blob/master/myres/rulerview.gif" width="300" height="612">
 
 
+Step 1. Add the JitPack repository to your build file 
 
 Add it in your root build.gradle at the end of repositories:
 
