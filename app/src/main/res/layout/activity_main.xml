@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.rulerview.MainActivity">
+
+    <com.rulerlibrary.RulerView
+        android:id="@+id/sizeview_kg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:currentValue="76"
+        app:maxValue="150"
+        app:minValue="45"
+        app:titleName="体重"
+        app:unitName="kg" />
+
+    <com.rulerlibrary.RulerView
+        android:id="@+id/sizeview_cm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:currentValue="171"
+        app:maxValue="200"
+        app:minValue="45"
+        app:titleName="身高"
+        app:unitName="cm" />
+
+</LinearLayout>

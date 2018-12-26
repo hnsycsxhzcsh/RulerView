@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RulerView">
+        <attr name="titleName" format="reference|string" />
+        <attr name="unitName" format="reference|string" />
+        <attr name="minValue" format="reference|integer" />
+        <attr name="maxValue" format="reference|integer" />
+        <attr name="currentValue" format="reference|integer" />
+    </declare-styleable>
+
+</resources>
