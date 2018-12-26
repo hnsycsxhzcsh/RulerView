@@ -8,9 +8,9 @@
 <img src="https://github.com/hnsycsxhzcsh/RulerView/blob/master/myres/rulerview.gif" width="300" height="612">
 
 
-Step 1. Add the JitPack repository to your build file 
+步骤1.将JitPack存储库添加到构建文件中
 
-Add it in your root build.gradle at the end of repositories:
+项目的根build.gradle中添加以下代码：
 
 	allprojects {
 		repositories {
@@ -19,7 +19,7 @@ Add it in your root build.gradle at the end of repositories:
 		}
 	}
 
-Step 2. Add the dependency
+步骤2.build.gradle添加依赖项
 
 	dependencies {
 	        implementation 'com.github.hnsycsxhzcsh:RulerView:v1.1'
