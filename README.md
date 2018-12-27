@@ -7,6 +7,7 @@
 
 <img src="https://github.com/hnsycsxhzcsh/RulerView/blob/master/myres/rulerview.gif" width="300" height="612">
 
+项目中引用的方法：
 
 步骤1.将JitPack存储库添加到构建文件中
 
