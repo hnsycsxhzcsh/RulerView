@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mSizeViewKg.setOnValueChangeListener(new SizeViewValueChangeListener() {
+        mSizeViewCm.setOnValueChangeListener(new SizeViewValueChangeListener() {
             @Override
             public void onValueChange(int value) {
 
