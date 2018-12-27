@@ -40,8 +40,9 @@
 步骤4. activity中添加监听
   
   	mSizeViewKg = findViewById(R.id.sizeview_kg);
+	
 	//设置初始化值
-        mSizeViewKg.setCurrentValue(89);
+	mSizeViewKg.setCurrentValue(89);
 
 	mSizeViewKg.setOnValueChangeListener(new SizeViewValueChangeListener() {
             @Override
