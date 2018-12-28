@@ -113,7 +113,9 @@ public class RulerView extends View {
             }
             mMaxValue = maxValue;
             mMinValue = minValue;
+            //默认让标尺距离左侧为100
             mLeft = 100;
+            //默认让标尺距离顶部距离为100
             mTop = 100;
             setCurrentValue(currentValue);
             array.recycle();
@@ -137,14 +139,20 @@ public class RulerView extends View {
         mRulerWid = mMeasuredWidth - 2 * mLeft;
 
         mRight = mLeft + mRulerWid;
+        //默认让标尺可见的范围内可以显示6个单位的刻度
         mLineOffset = mRulerWid / 6;
         mRulerHei = mMeasuredHeight - 2 * mTop;
         mBottom = mRulerHei + mTop;
+        //使刻度线的长度为标尺高度的1/3
         mLineLong = mRulerHei / 3;
+        //标尺的指示器的长度为标尺高度的1/2
         mIndicatorLong = mRulerHei / 2;
 
+        //单位刻度下占有的屏幕宽度
         mAverage = mLineOffset / 10;
+        //标尺中间的位置的x坐标
         mRulerMiddleX = mMeasuredWidth / 2;
+        //标尺刻度值的y坐标位置
         mValueY = mTop + mLineLong + 100;
 
     }

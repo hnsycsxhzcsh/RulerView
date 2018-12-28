@@ -7,6 +7,7 @@
 
 <img src="https://github.com/hnsycsxhzcsh/RulerView/blob/master/myres/rulerview.gif" width="300" height="612">
 
+项目中引用的方法：
 
 步骤1.将JitPack存储库添加到构建文件中
 
@@ -50,6 +51,8 @@
 		//获取现在的值
             }
         });
+	
+我的博客地址：https://blog.csdn.net/m0_38074457/article/details/85305237
 
 如果有帮助到大家希望点下右上角Star，谢谢！
 
