@@ -23,7 +23,7 @@
 步骤2.build.gradle添加依赖项
 
 	dependencies {
-	        implementation 'com.github.hnsycsxhzcsh:RulerView:v1.1'
+	        implementation 'com.github.hnsycsxhzcsh:RulerView:v1.2'
 	}
 
 步骤3. 布局中引用控件
