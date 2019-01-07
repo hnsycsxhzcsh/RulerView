@@ -1,5 +1,6 @@
 package com.rulerlibrary;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -12,10 +13,20 @@ import android.graphics.RegionIterator;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 /**
  * Created by HARRY on 2018/12/26.
@@ -71,13 +82,15 @@ public class RulerView extends View {
     private String mUnitName;
     //滑动监听
     private SizeViewValueChangeListener listener;
+    private GestureDetectorCompat mDetector;
+    private ValueAnimator animator;
 
     public RulerView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public RulerView(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public RulerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -93,6 +106,8 @@ public class RulerView extends View {
 
 
     private void initView(Context context, AttributeSet attrs) {
+        mDetector = new GestureDetectorCompat(context, new RulerGestureListener());
+
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.RulerView);
         if (array != null) {
             String titleName = array.getString(R.styleable.RulerView_titleName);
@@ -344,39 +359,64 @@ public class RulerView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mCurrentDownX = event.getX();
-                //记录用户点击屏幕时候的坐标点
-                mStartClickX = mCurrentDownX;
-                mStartClickY = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                //只能是初始点击坐标在标尺范围内的，才可以移动尺标
-                if (mStartClickX >= mLeft && mStartClickX <= mRight &&
-                        mStartClickY >= mTop && mStartClickY < mBottom) {
-                    float moveX = event.getX();
-                    System.out.println("mCurrentDownX:" + mCurrentDownX + ",moveX:" + moveX);
-                    float distance = moveX - mCurrentDownX;
-                    mCurrentDownX = moveX;
-                    float value = mCurrentValue - distance / mAverage;
-                    System.out.println("value:" + value);
-                    setCurrentValue(value);
-                    invalidate();
-                    if (listener != null) {
-                        listener.onValueChange((int) mCurrentValue);
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_SCROLL:
-                float scrollX = event.getX();
-                System.out.println("scrollX:" + scrollX);
-                break;
-            default:
-                break;
+        return mDetector.onTouchEvent(event);
+    }
+
+    private class RulerGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            if (animator != null) {
+                animator.cancel();
+            }
+            mCurrentDownX = e.getX();
+            //记录用户点击屏幕时候的坐标点
+            mStartClickX = mCurrentDownX;
+            mStartClickY = e.getY();
+            return true;
         }
-        //返回true使view来消费事件
-        return true;
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            System.out.println("onScroll");
+            if (mStartClickX >= mLeft && mStartClickX <= mRight &&
+                    mStartClickY >= mTop && mStartClickY < mBottom) {
+                float value = mCurrentValue + distanceX / mAverage;
+                setCurrentValue(value);
+                invalidate();
+                if (listener != null) {
+                    listener.onValueChange((int) mCurrentValue);
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            System.out.println("onFling");
+            if (mStartClickX >= mLeft && mStartClickX <= mRight &&
+                    mStartClickY >= mTop && mStartClickY < mBottom) {
+                if (animator != null) {
+                    animator.cancel();
+                }
+                animator = ValueAnimator.ofFloat(velocityX, 0);
+                animator.setDuration(1000);
+//                animator.setInterpolator(new LinearInterpolator());
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        float animatedValue = (float) animation.getAnimatedValue();
+                        float value = mCurrentValue - (animatedValue * (float) 0.005) / mAverage;
+                        setCurrentValue(value);
+                        invalidate();
+                        if (listener != null) {
+                            listener.onValueChange((int) mCurrentValue);
+                        }
+                    }
+                });
+                animator.start();
+            }
+            return true;
+        }
     }
 
     public void setCurrentValue(float value) {
