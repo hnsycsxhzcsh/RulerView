@@ -395,9 +395,6 @@ public class RulerView extends View {
             System.out.println("onFling");
             if (mStartClickX >= mLeft && mStartClickX <= mRight &&
                     mStartClickY >= mTop && mStartClickY < mBottom) {
-                if (animator != null) {
-                    animator.cancel();
-                }
                 animator = ValueAnimator.ofFloat(velocityX, 0);
                 animator.setDuration(1000);
 //                animator.setInterpolator(new LinearInterpolator());
