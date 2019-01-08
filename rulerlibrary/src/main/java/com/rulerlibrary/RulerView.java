@@ -160,6 +160,7 @@ public class RulerView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        //画整体背景为白色
         initDraw(canvas);
 
         //画标尺
@@ -178,22 +179,22 @@ public class RulerView extends View {
         drawRulerValue(canvas, (int) mCurrentValue);
     }
 
-//    private void drawOutSideRuler(Canvas canvas) {
-//        mPaint.setColor(Color.parseColor("#FFFFFF"));
-//        mPaint.setStyle(Paint.Style.FILL);
-//
-//        Rect rulerRect = new Rect();
-//        rulerRect.set(mLeft, mTop, mRight, mBottom);
-//
-//        Rect allRect = new Rect();
-//        allRect.set(0, 0, mMeasuredWidth, mRulerHei);
-//
-//        Region regionRuler = new Region(rulerRect);
-//        Region regionAll = new Region(allRect);
-//        regionAll.op(regionRuler, Region.Op.DIFFERENCE);
-//
-//        drawRegion(canvas, regionAll, mPaint);
-//    }
+    private void drawOutSideRuler(Canvas canvas) {
+        mPaint.setColor(Color.parseColor("#FFFFFF"));
+        mPaint.setStyle(Paint.Style.FILL);
+
+        Rect rulerRect = new Rect();
+        rulerRect.set(mLeft-1, mTop-1, mRight+11, mBottom+1);
+
+        Rect allRect = new Rect();
+        allRect.set(0, 0, mMeasuredWidth, mMeasuredHeight);
+
+        Region regionRuler = new Region(rulerRect);
+        Region regionAll = new Region(allRect);
+        regionAll.op(regionRuler, Region.Op.DIFFERENCE);
+
+        drawRegion(canvas, regionAll, mPaint);
+    }
 
     private void drawRegion(Canvas canvas, Region rgn, Paint paint) {
         RegionIterator iter = new RegionIterator(rgn);
