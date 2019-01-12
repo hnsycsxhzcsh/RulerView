@@ -12,7 +12,6 @@ import android.graphics.Region;
 import android.graphics.RegionIterator;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.text.TextUtils;
@@ -97,13 +96,6 @@ public class RulerView extends View {
         super(context, attrs, defStyleAttr);
         initView(context, attrs);
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public RulerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initView(context, attrs);
-    }
-
 
     private void initView(Context context, AttributeSet attrs) {
         mDetector = new GestureDetectorCompat(context, new RulerGestureListener());
