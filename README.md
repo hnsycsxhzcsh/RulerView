@@ -12,7 +12,7 @@ Rendering</br>
 The method referenced in the project:</br>
 项目中引用的方法：
 
-#### Step 1. Add the JitPack repository to your build file </br>
+### Step 1. Add the JitPack repository to your build file </br>
 步骤1.将JitPack存储库添加到构建文件中</br>
 项目的根build.gradle中添加以下代码：
 ```Java
@@ -23,14 +23,14 @@ The method referenced in the project:</br>
 		}
 	}
 ```
-#### Step 2. Add the dependency</br>
+### Step 2. Add the dependency</br>
 步骤2.build.gradle添加依赖项
 ```Java
 	dependencies {
 	        implementation 'com.github.hnsycsxhzcsh:RulerView:v1.3'
 	}
 ```
-#### Step 3. Reference control in layout</br>
+### Step 3. Reference control in layout</br>
 步骤3. 布局中引用控件
 ```Java
   	<com.rulerlibrary.RulerView
@@ -42,8 +42,8 @@ The method referenced in the project:</br>
         	app:minValue="45"
         	app:titleName="体重"
         	app:unitName="kg" />
-```	
-#### Step 4. Add listener to the activity</br>
+```
+### Step 4. Add listener to the activity
 步骤4. activity中添加监听
 ```Java
   	mSizeViewKg = findViewById(R.id.sizeview_kg);
