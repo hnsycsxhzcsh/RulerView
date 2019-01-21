@@ -1,12 +1,17 @@
 # RulerView
+Android custom control RulerView, imitation only products will height, weight and other rulers, size control, slide to modify the scale value
+
 自定义控件，身高、体重等标尺控件
 
 <a href="https://github.com/hnsycsxhzcsh/RulerView/blob/master/myres/rulerview.apk">Download Apk</a>
+
+Rendering
 
 效果图
 
 <img src="https://github.com/hnsycsxhzcsh/RulerView/blob/master/myres/rulerview.gif" width="300" height="612">
 
+The method referenced in the project:
 项目中引用的方法：
 
 步骤1.将JitPack存储库添加到构建文件中
