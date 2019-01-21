@@ -12,7 +12,10 @@ Rendering
 <img src="https://github.com/hnsycsxhzcsh/RulerView/blob/master/myres/rulerview.gif" width="300" height="612">
 
 The method referenced in the project:
+
 项目中引用的方法：
+
+Step 1. Add the JitPack repository to your build file 
 
 步骤1.将JitPack存储库添加到构建文件中
 
@@ -25,11 +28,15 @@ The method referenced in the project:
 		}
 	}
 
+Step 2. Add the dependency
+
 步骤2.build.gradle添加依赖项
 
 	dependencies {
 	        implementation 'com.github.hnsycsxhzcsh:RulerView:v1.3'
 	}
+
+Step 3. Reference control in layout
 
 步骤3. 布局中引用控件
 
@@ -43,6 +50,8 @@ The method referenced in the project:
         	app:titleName="体重"
         	app:unitName="kg" />
 		
+Step 4. Add listener to the activity
+
 步骤4. activity中添加监听
   
   	mSizeViewKg = findViewById(R.id.sizeview_kg);
@@ -58,6 +67,8 @@ The method referenced in the project:
         });
 	
 我的博客地址：https://blog.csdn.net/m0_38074457/article/details/85305237
+
+If you are helpful, everyone wants to click on the upper right corner of Star, thank you!
 
 <font color="#FF0000">如果有帮助到大家希望点下右上角Star，谢谢！</font>
 
