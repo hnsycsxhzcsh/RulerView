@@ -104,7 +104,6 @@ public class RulerView extends View {
         initView(context, attrs);
     }
 
-
     private void initView(Context context, AttributeSet attrs) {
         mDetector = new GestureDetectorCompat(context, new RulerGestureListener());
 
@@ -169,7 +168,7 @@ public class RulerView extends View {
         mRulerMiddleX = mMeasuredWidth / 2;
         //标尺刻度值的y坐标位置
         mValueY = mTop + mLineLong + 100;
-
+        System.out.println("RulerView:onMeasure");
     }
 
     @Override
@@ -191,6 +190,7 @@ public class RulerView extends View {
 
         //画实时刻度值
         drawRulerValue(canvas, (int) mCurrentValue);
+        System.out.println("RulerView:onDraw");
     }
 
 //    private void drawOutSideRuler(Canvas canvas) {
