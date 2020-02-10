@@ -17,8 +17,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSizeViewKg = findViewById(R.id.sizeview_kg);
-        mSizeViewCm = findViewById(R.id.sizeview_cm);
+        mSizeViewKg = (RulerView) findViewById(R.id.sizeview_kg);
+        mSizeViewCm = (RulerView) findViewById(R.id.sizeview_cm);
 
         mSizeViewKg.setCurrentValue(89);
 

@@ -12,7 +12,6 @@ import android.graphics.Region;
 import android.graphics.RegionIterator;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.text.TextUtils;
@@ -98,12 +97,6 @@ public class RulerView extends View {
         initView(context, attrs);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public RulerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initView(context, attrs);
-    }
-
     private void initView(Context context, AttributeSet attrs) {
         mDetector = new GestureDetectorCompat(context, new RulerGestureListener());
 
@@ -168,12 +161,13 @@ public class RulerView extends View {
         mRulerMiddleX = mMeasuredWidth / 2;
         //标尺刻度值的y坐标位置
         mValueY = mTop + mLineLong + 100;
-        System.out.println("RulerView:onMeasure");
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        //画整体背景为白色
         initDraw(canvas);
 
         //画标尺
@@ -190,25 +184,24 @@ public class RulerView extends View {
 
         //画实时刻度值
         drawRulerValue(canvas, (int) mCurrentValue);
-        System.out.println("RulerView:onDraw");
     }
 
-//    private void drawOutSideRuler(Canvas canvas) {
-//        mPaint.setColor(Color.parseColor("#FFFFFF"));
-//        mPaint.setStyle(Paint.Style.FILL);
-//
-//        Rect rulerRect = new Rect();
-//        rulerRect.set(mLeft, mTop, mRight, mBottom);
-//
-//        Rect allRect = new Rect();
-//        allRect.set(0, 0, mMeasuredWidth, mRulerHei);
-//
-//        Region regionRuler = new Region(rulerRect);
-//        Region regionAll = new Region(allRect);
-//        regionAll.op(regionRuler, Region.Op.DIFFERENCE);
-//
-//        drawRegion(canvas, regionAll, mPaint);
-//    }
+    private void drawOutSideRuler(Canvas canvas) {
+        mPaint.setColor(Color.parseColor("#FFFFFF"));
+        mPaint.setStyle(Paint.Style.FILL);
+
+        Rect rulerRect = new Rect();
+        rulerRect.set(mLeft-1, mTop-1, mRight+11, mBottom+1);
+
+        Rect allRect = new Rect();
+        allRect.set(0, 0, mMeasuredWidth, mMeasuredHeight);
+
+        Region regionRuler = new Region(rulerRect);
+        Region regionAll = new Region(allRect);
+        regionAll.op(regionRuler, Region.Op.DIFFERENCE);
+
+        drawRegion(canvas, regionAll, mPaint);
+    }
 
     private void drawRegion(Canvas canvas, Region rgn, Paint paint) {
         RegionIterator iter = new RegionIterator(rgn);
