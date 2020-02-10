@@ -6,7 +6,6 @@ Android custom control RulerView, imitation only products will height, weight an
 
 Rendering</br>
 效果图
-<img src="https://github.com/hnsycsxhzcsh/RulerView/blob/master/myres/2.webp" width="300" height="612">
 
 <img src="https://github.com/hnsycsxhzcsh/RulerView/blob/master/myres/rulerview.gif" width="300" height="612">
 
