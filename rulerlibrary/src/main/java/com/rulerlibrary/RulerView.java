@@ -1,31 +1,23 @@
 package com.rulerlibrary;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.RegionIterator;
-import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 
 /**
  * Created by HARRY on 2018/12/26.
@@ -83,22 +75,30 @@ public class RulerView extends View {
     private SizeViewValueChangeListener listener;
     private GestureDetectorCompat mDetector;
     private ValueAnimator animator;
+    private Path mPath = new Path(); //标尺裁剪线
+    private float mCornor; //标尺圆角
+    private RectF mRectFLeftTop;
+    private RectF mRectFLeftBottom;
+    private RectF mRectFRightTop;
+    private RectF mRectFRightBottom;
+    private int mRulerStokeWidth = 3;//刻度尺边框宽度
 
     public RulerView(Context context) {
         this(context, null);
     }
 
-    public RulerView(Context context, @Nullable AttributeSet attrs) {
+    public RulerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RulerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RulerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context, attrs);
     }
 
     private void initView(Context context, AttributeSet attrs) {
         mDetector = new GestureDetectorCompat(context, new RulerGestureListener());
+        mCornor = DensityUtil.dip2px(getContext(), 6);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.RulerView);
         if (array != null) {
@@ -106,7 +106,7 @@ public class RulerView extends View {
             String unitName = array.getString(R.styleable.RulerView_unitName);
             int minValue = array.getInt(R.styleable.RulerView_minValue, 30);
             int maxValue = array.getInt(R.styleable.RulerView_maxValue, 120);
-            int currentValue = array.getInt(R.styleable.RulerView_currentValue, 76);
+            int currentValue = array.getInt(R.styleable.RulerView_currentValue, 70);
 
             if (TextUtils.isEmpty(titleName)) {
                 mTitleName = "体重";
@@ -162,6 +162,8 @@ public class RulerView extends View {
         //标尺刻度值的y坐标位置
         mValueY = mTop + mLineLong + 100;
 
+        //计算剪辑路径
+        measureClipPath();
     }
 
     @Override
@@ -169,47 +171,45 @@ public class RulerView extends View {
         super.onDraw(canvas);
         //画整体背景为白色
         initDraw(canvas);
-
         //画标尺
         drawRuler(canvas);
-
-//        //把标尺以外所有区域染白
-//        drawOutSideRuler(canvas);
-
-        //目前没有更好的办法，先把标尺的左右两侧都设置白色
-        drawLeftRight(canvas);
-
         //画标题
         drawTitle(canvas);
-
         //画实时刻度值
         drawRulerValue(canvas, (int) mCurrentValue);
+        //剪辑
+        canvas.clipPath(mPath, Region.Op.DIFFERENCE);
+        canvas.drawColor(Color.WHITE);
     }
 
-    private void drawOutSideRuler(Canvas canvas) {
-        mPaint.setColor(Color.parseColor("#FFFFFF"));
-        mPaint.setStyle(Paint.Style.FILL);
+    /**
+     * 计算剪辑路径
+     */
+    private void measureClipPath() {
+        int left = mLeft - 2;
+        int top = mTop - 2;
+        int right = mRight + 2;
+        int bottom = mBottom + 2;
 
-        Rect rulerRect = new Rect();
-        rulerRect.set(mLeft-1, mTop-1, mRight+11, mBottom+1);
+        mRectFLeftTop = new RectF(left, top, left + 2 * mCornor, top + 2 * mCornor);
+        mRectFRightTop = new RectF(right - 2 * mCornor, top, right, top + 2 * mCornor);
+        mRectFRightBottom = new RectF(right - 2 * mCornor, bottom - 2 * mCornor, right, bottom);
+        mRectFLeftBottom = new RectF(left, bottom - 2 * mCornor, left + 2 * mCornor, bottom);
 
-        Rect allRect = new Rect();
-        allRect.set(0, 0, mMeasuredWidth, mMeasuredHeight);
+        int left2 = mLeft - mRulerStokeWidth;
+        int top2 = mTop - mRulerStokeWidth;
+        int right2 = mRight + mRulerStokeWidth;
+        int bottom2 = mBottom + mRulerStokeWidth;
 
-        Region regionRuler = new Region(rulerRect);
-        Region regionAll = new Region(allRect);
-        regionAll.op(regionRuler, Region.Op.DIFFERENCE);
-
-        drawRegion(canvas, regionAll, mPaint);
-    }
-
-    private void drawRegion(Canvas canvas, Region rgn, Paint paint) {
-        RegionIterator iter = new RegionIterator(rgn);
-        Rect r = new Rect();
-
-        while (iter.next(r)) {
-            canvas.drawRect(r, paint);
-        }
+        mPath.moveTo(left2 + mCornor, top2);
+        mPath.lineTo(right - mCornor, top2);
+        mPath.arcTo(mRectFRightTop, 270f, 90f, false);
+        mPath.lineTo(right2, bottom2 - mCornor);
+        mPath.arcTo(mRectFRightBottom, 0f, 90f, false);
+        mPath.lineTo(left2 + mCornor, bottom2);
+        mPath.arcTo(mRectFLeftBottom, 90f, 90f, false);
+        mPath.lineTo(left2, top2 + mCornor);
+        mPath.arcTo(mRectFLeftTop, 180f, 90f, false);
     }
 
     private void drawTitle(Canvas canvas) {
@@ -226,17 +226,6 @@ public class RulerView extends View {
 
         RectF rect = new RectF(0, 0, mMeasuredWidth, mMeasuredHeight);
         canvas.drawRect(rect, mPaint);
-    }
-
-    private void drawLeftRight(Canvas canvas) {
-        mPaint.setColor(Color.parseColor("#FFFFFF"));
-        mPaint.setStyle(Paint.Style.FILL);
-
-        RectF rectLeft = new RectF(0, 0, mLeft - 2, mMeasuredHeight);
-        RectF rectRight = new RectF(mRight + 2, 0, mMeasuredWidth, mMeasuredHeight);
-
-        canvas.drawRect(rectLeft, mPaint);
-        canvas.drawRect(rectRight, mPaint);
     }
 
     private void setTitlePaint() {
@@ -446,7 +435,7 @@ public class RulerView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
 //        mPaint.setColor(Color.parseColor("#E2E2E2"));
         mPaint.setColor(Color.parseColor("#000000"));
-        mPaint.setStrokeWidth(3);
+        mPaint.setStrokeWidth(mRulerStokeWidth);
     }
 
     public void setOnValueChangeListener(SizeViewValueChangeListener listener) {

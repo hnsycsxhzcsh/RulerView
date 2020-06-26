@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         mSizeViewKg = (RulerView) findViewById(R.id.sizeview_kg);
         mSizeViewCm = (RulerView) findViewById(R.id.sizeview_cm);
 
-        mSizeViewKg.setCurrentValue(89);
+        mSizeViewKg.setCurrentValue(90);
 
         mSizeViewKg.setOnValueChangeListener(new SizeViewValueChangeListener() {
             @Override
